@@ -3,14 +3,16 @@ class Controller {
         console.log("initiating content");
         this.container = document.querySelector("#content");
         this.favCon = document.querySelector("#favcontainer");
+        this.pagination = document.querySelector(".pagination");
         this.pageCounter = 1;
         this.favSum = 0;
         this.pageMax = 0;
+        this.counterHolder = null;
         this.generateHTML();
         this.getFavSum().then(res => {
             this.favSum = res;
             this.pageMax = Math.ceil(this.favSum / 30);
-            this.create("div", "counter-holder", `<span class='counter-span'>${this.pageCounter}</span> OF ${this.pageMax}`, this.container);
+            this.counterHolder = this.create("div", "counter-holder", `<span class='counter-span'>${this.pageCounter}</span> OF ${this.pageMax} pages`, this.container);
         })
     }
 
@@ -26,6 +28,16 @@ class Controller {
         return body;
     }
 
+    handleUrl = () => {
+        const url = window.location.search;
+        if (!url) {
+            return `${window.location.href}?`
+        }
+        else {
+            return `${window.location.href}&`
+        }
+    }
+
     getFavSum = () => {
         return new Promise((resolve, reject) => {
             const loop = setInterval(() => {
@@ -33,7 +45,7 @@ class Controller {
                 if (sumNode) {
                     clearInterval(loop); 
                     const contentStr = sumNode.textContent;
-                    if (contentStr.includes("Favorites")) {
+                    if (contentStr.includes("(")) {
                         return resolve(parseFloat(sumNode.textContent.substring(1, sumNode.textContent.length-1).replace(/,/g, '')));
                     }
                     else if (contentStr.includes("Results")) {
@@ -48,6 +60,7 @@ class Controller {
     }
 
     generateHTML = () => {
+        this.pagination.classList.add("hide");
         const more = this.create("button", "more-button", "<i class='fa fa-plus'></i>", this.container);
         more.addEventListener("click", (event) => {
             this.loadMore(event);
@@ -74,7 +87,7 @@ class Controller {
         };
         const counter = document.querySelector(".counter-span");
         const xml = new XMLHttpRequest();
-        let url = `${location.href}&page=${this.pageCounter + 1}`;
+        let url = `${this.handleUrl()}page=${this.pageCounter + 1}`;
         xml.open("GET", url);
         xml.send();
         xml.onreadystatechange = () => {
