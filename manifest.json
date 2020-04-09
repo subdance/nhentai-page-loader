@@ -1,0 +1,36 @@
+{
+    "name": "nh-filter",
+    "version": "1.0",
+    "description": "按标签过滤收藏中的本子. Any bugs? Mail me at drifterinnocent@gmail.com",
+    "permissions": [
+        "declarativeContent",
+        "activeTab"
+    ],
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://nhentai.net/favorites/*"],
+            "js": ["content_script.js"],
+            "css": ["content.css"]
+        }
+    ],
+    "manifest_version": 2,
+    "page_action": {
+        "show_matches": ["https://nhentai.net/favorites/*"],
+        "default_title": "nh-filter", 
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "images/16.png",
+            "48": "images/48.png",
+            "128": "images/128.png"
+        }
+    },
+    "icons": {
+        "16": "images/16.png",
+        "48": "images/48.png",
+        "128": "images/128.png"
+    }
+}

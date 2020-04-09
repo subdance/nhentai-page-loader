@@ -1,0 +1,33 @@
+.more-button {
+    position: fixed;
+    right: 20px;
+    bottom: 0px;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    outline: none;
+}
+.more-button:active {
+    transform: translate(1px, 1px);
+}
+.pagination {
+    display: none!important;
+}
+.counter-holder {
+    position: fixed;
+    right: 20px;
+    bottom: 100px;
+    height: 20px;
+    width: 200px;
+    text-align: right;
+    line-height: 20px;
+    font-size: 12px;
+}
+.counter-span {
+    font-style: italic;
+    font-weight: bold;
+    font-size: 20px;
+    color: #ed2553;
+}
+
