@@ -29,13 +29,7 @@ class Controller {
     }
 
     handleUrl = () => {
-        const url = window.location.search;
-        if (!url) {
-            return `${window.location.href}?`
-        }
-        else {
-            return `${window.location.href}&`
-        }
+        return window.location.search ? `${window.location.href}&` : `${window.location.href}?`
     }
 
     getFavSum = () => {
