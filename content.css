@@ -3,13 +3,28 @@
     right: 20px;
     bottom: 0px;
     border-radius: 50%;
-    height: 50px;
-    width: 50px;
+    height: 140px;
+    width: 140px;
     cursor: pointer;
     outline: none;
+    background: url('chrome-extension://__MSG_@@bmfendlogdmfccpdklnodbbcjikegoic/images/chibi.png');
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 0 0.75rem crimson);
+    transition: all 0.2s;
+}
+.more-button:hover {
+    filter: drop-shadow(0 0 0.75rem #f15478);
+    transform: translate(-2px, -2px);
 }
 .more-button:active {
-    transform: translate(1px, 1px);
+    transition: all 0.2s;
+    transform: translate(2px, 2px);
+    filter: drop-shadow(0 0 0.75rem rgb(238, 131, 152));
+}
+.processing {
+    pointer-events: none;
 }
 .pagination {
     display: none!important;
@@ -17,10 +32,10 @@
 .counter-holder {
     position: fixed;
     right: 20px;
-    bottom: 100px;
+    bottom: 160px;
     height: 20px;
-    width: 200px;
-    text-align: right;
+    width: 250px;
+    text-align: left;
     line-height: 20px;
     font-size: 12px;
 }

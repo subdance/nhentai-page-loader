@@ -11,9 +11,23 @@ class Controller {
         this.generateHTML();
         this.getFavSum().then(res => {
             this.favSum = res;
-            this.pageMax = Math.ceil(this.favSum / 30);
-            this.counterHolder = this.create("div", "counter-holder", `<span class='counter-span'>${this.pageCounter}</span> OF ${this.pageMax} pages`, this.container);
-        })
+            this.pageMax = Math.ceil(this.favSum / 25);
+            this.counterHolder = this.create("div", "counter-holder", `<span class='counter-span'>${this.pageCounter}</span> OF ${this.pageMax} pages <span id="face">(｡･ω･｡)ﾉ♡</span>`, this.container);
+        });
+        this.face = [
+            "(๑•̀ㅂ•́)و✧",
+            "(｡･ω･｡)ﾉ♥",
+            "(*ෆ´ ˘ `ෆ*)♡",
+            "ฅ՞•ﻌ•՞ฅ",
+            "(ฅ◑ω◑ฅ)",
+            "(ฅ• . •ฅ)ﻌﻌﻌ♥",
+            "(๑Ő௰Ő๑)",
+            "o(*≥▽≤)ツ",
+            "_(´ཀ`」 ∠)_"
+        ];
+        Number.prototype.isBetween = function(min, max) {
+            return ((this-min)*(this-max) <= 0);
+        }
     }
 
     create = (tag, className, innerHTML, parent) => {
@@ -55,7 +69,8 @@ class Controller {
 
     generateHTML = () => {
         this.pagination.classList.add("hide");
-        const more = this.create("button", "more-button", "<i class='fa fa-plus'></i>", this.container);
+        // const more = this.create("button", "more-button", "<i class='fa fa-plus'></i>", this.container);
+        const more = this.create("div", "more-button", "<i class='fa fa-plus'></i>", this.container);
         more.addEventListener("click", (event) => {
             this.loadMore(event);
         })
@@ -71,7 +86,7 @@ class Controller {
 
     loadMore = (event) => {
         const e = event.currentTarget;
-        e.setAttribute("disabled", true);
+        e.classList.add("processing");
         e.innerHTML = "<i class='fa fa-spinner fa-spin'></i>";
         if (this.pageMax <= this.pageCounter) {
             e.removeAttribute("disabled");
@@ -86,10 +101,11 @@ class Controller {
         xml.send();
         xml.onreadystatechange = () => {
             if (xml.readyState === XMLHttpRequest.DONE) {
-                e.removeAttribute("disabled");
+                e.classList.remove("processing");
                 e.innerHTML = "<i class='fa fa-plus'></i>";
                 if (xml.status === 200) {
                     this.pageCounter ++;
+                    this.swap();
                     counter.innerHTML = this.pageCounter;
                     const x = document.createElement("html");
                     x.innerHTML = xml.responseText;
@@ -103,6 +119,35 @@ class Controller {
                     })
                 }
             }
+        }
+    }
+
+    isBetween = (x, min, max) => {
+        return ((x-min)*(x-max) <= 0);
+    }
+
+    swap = () => {
+        let face = document.querySelector("#face");
+        if (this.pageCounter.isBetween(2, 4)) {
+            face.textContent = this.face[this.pageCounter - 2]; 
+        }
+        else if (this.pageCounter.isBetween(5, 7)) {
+            face.textContent = this.face[3]; 
+        }
+        else if (this.pageCounter.isBetween(8, 11)) {
+            face.textContent = this.face[4]; 
+        }
+        else if (this.pageCounter.isBetween(12, 16)) {
+            face.textContent = this.face[5]; 
+        }
+        else if (this.pageCounter.isBetween(17, 22)) {
+            face.textContent = this.face[6]; 
+        }
+        else if (this.pageCounter.isBetween(23, 29)) {
+            face.textContent = this.face[7]; 
+        }
+        else {
+            face.textContent = this.face[8]; 
         }
     }
 }
