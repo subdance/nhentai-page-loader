@@ -1,7 +1,7 @@
 {
     "name": "nhentai-page-loader",
     "version": "1.0",
-    "description": "不翻页的情况下加载下一页. Any bugs? Mail me at drifterinnocent@gmail.com",
+    "description": "Load more doujins of favorites in one page. Any bugs? Mail me at drifterinnocent@gmail.com",
     "permissions": [
         "declarativeContent",
         "activeTab"
