@@ -4,7 +4,7 @@ class Controller {
         this.container = document.querySelector("#content");
         this.favCon = document.querySelector("#favcontainer");
         this.pagination = document.querySelector(".pagination");
-        this.pageCounter = 1;
+        this.pageCounter = this.getCurrentPage();
         this.favSum = 0;
         this.pageMax = 0;
         this.counterHolder = null;
@@ -12,7 +12,7 @@ class Controller {
         this.getFavSum().then(res => {
             this.favSum = res;
             this.pageMax = Math.ceil(this.favSum / 25);
-            this.counterHolder = this.create("div", "counter-holder", `<span class='counter-span'>${this.pageCounter}</span> OF ${this.pageMax} pages <span id="face">(｡･ω･｡)ﾉ♡</span>`, this.container);
+            this.counterHolder = this.create("div", "counter-holder", `<span class="start-page hide">${this.getCurrentPage()}</span><span class='counter-span'>${this.pageCounter}</span> OF ${this.pageMax} pages <span id="face">(｡･ω･｡)ﾉ♡</span>`, this.container);
         });
         this.face = [
             "(๑•̀ㅂ•́)و✧",
@@ -67,10 +67,29 @@ class Controller {
         })
     }
 
+    getCurrentPage = () => {
+        const para = window.location.search;
+        if (!para) {
+            console.log("1")
+            return 1
+        }
+        else {
+            const page = new URLSearchParams(para).get("page");
+            if (page) {
+                console.log(page);
+                return page;
+            }
+            else {
+                console.log("1")
+                return 1
+            }
+        }
+    }
+
     generateHTML = () => {
-        this.pagination.classList.add("hide");
-        // const more = this.create("button", "more-button", "<i class='fa fa-plus'></i>", this.container);
+        const id = chrome.runtime.id;
         const more = this.create("div", "more-button", "<i class='fa fa-plus'></i>", this.container);
+        more.style.backgroundImage = `url(chrome-extension://__MSG_@@${id}/images/chibi.png)`
         more.addEventListener("click", (event) => {
             this.loadMore(event);
         })
@@ -87,7 +106,7 @@ class Controller {
     loadMore = (event) => {
         const e = event.currentTarget;
         e.classList.add("processing");
-        e.innerHTML = "<i class='fa fa-spinner fa-spin'></i>";
+        e.innerHTML = "<i class='fa fa-refresh fa-spin'></i>";
         if (this.pageMax <= this.pageCounter) {
             e.removeAttribute("disabled");
             e.innerHTML = "<i class='fa fa-plus'></i>";
@@ -103,6 +122,8 @@ class Controller {
             if (xml.readyState === XMLHttpRequest.DONE) {
                 e.classList.remove("processing");
                 e.innerHTML = "<i class='fa fa-plus'></i>";
+                const s = document.querySelector(".start-page");
+                s.classList.remove("hide");
                 if (xml.status === 200) {
                     this.pageCounter ++;
                     this.swap();
@@ -120,10 +141,6 @@ class Controller {
                 }
             }
         }
-    }
-
-    isBetween = (x, min, max) => {
-        return ((x-min)*(x-max) <= 0);
     }
 
     swap = () => {
