@@ -12,7 +12,7 @@ class Controller {
         this.getFavSum().then(res => {
             this.favSum = res;
             this.pageMax = Math.ceil(this.favSum / 25);
-            this.counterHolder = this.create("div", "counter-holder", `<span class="start-page hide">${this.getCurrentPage()}</span><span class='counter-span'>${this.pageCounter}</span> OF ${this.pageMax} pages <span id="face">(｡･ω･｡)ﾉ♡</span>`, this.container);
+            this.counterHolder = this.create("div", "counter-holder", `<span class="start-page hide">${this.pageCounter}</span><span class='counter-span'>${this.pageCounter}</span> OF ${this.pageMax} pages <span id="face">(｡･ω･｡)ﾉ♡</span>`, this.container);
         });
         this.face = [
             "(๑•̀ㅂ•́)و✧",
@@ -43,7 +43,22 @@ class Controller {
     }
 
     handleUrl = () => {
-        return window.location.search ? `${window.location.href}&` : `${window.location.href}?`
+        const search = window.location.search;
+        if (!search) {
+            return `${window.location.href}?page=${this.pageCounter + 1}`;
+        }
+        else {
+            const para = new URLSearchParams(window.location.search);
+            if (!para.get("page")) {
+                console.log("with search no page")
+                return `${window.location.href}&page=${this.pageCounter + 1}`;
+            }
+            else {
+                para.set("page", this.pageCounter + 1);
+                console.log("with search with page")
+                return `https://${location.hostname}/favorites/?${para.toString()}`
+            }
+        }
     }
 
     getFavSum = () => {
@@ -77,7 +92,7 @@ class Controller {
             const page = new URLSearchParams(para).get("page");
             if (page) {
                 console.log(page);
-                return page;
+                return Number(page);
             }
             else {
                 console.log("1")
@@ -115,7 +130,9 @@ class Controller {
         };
         const counter = document.querySelector(".counter-span");
         const xml = new XMLHttpRequest();
-        let url = `${this.handleUrl()}page=${this.pageCounter + 1}`;
+        // let url = `${this.handleUrl()}page=${this.pageCounter + 1}`;
+        let url = this.handleUrl();
+        console.log(url);
         xml.open("GET", url);
         xml.send();
         xml.onreadystatechange = () => {
@@ -130,7 +147,8 @@ class Controller {
                     counter.innerHTML = this.pageCounter;
                     const x = document.createElement("html");
                     x.innerHTML = xml.responseText;
-                    const newFavNodes = x.querySelectorAll(".gallery-favorite");
+                    const newFavNodes = x.querySelectorAll(".gallery-favorite").length ? x.querySelectorAll(".gallery-favorite") : x.querySelectorAll(".gallery");
+                    console.log(newFavNodes.length)
                     newFavNodes.forEach(item => {
                         this.favCon.appendChild(item);
                         const img = item.querySelector("img");
